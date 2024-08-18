@@ -5,25 +5,13 @@ services:
     build: .
     ports:
       - "5000:5000"
-    volumes:
-      - .:/app
     environment:
-      - FLASK_ENV=development
-      - DATABASE_URL=postgresql://user:password@db:5432/taskdb
-      - SESSION_COOKIE_SECURE=False
-      - LOG_TO_STDOUT=True
-      - POOL_SIZE=10
-      - POOL_RECYCLE=3600
+      - FLASK_ENV=production
     depends_on:
       - db
   db:
     image: postgres:13
     volumes:
       - postgres_data:var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=taskdb
-
 volumes:
   postgres_data:
