@@ -1,19 +1,17 @@
 from flask import request
 from flask_restx import Resource, fields
-from app import api, db
+from app import db
 from app.models import Task
 
-task_model = api.model('Task', {
-    'id': fields.Integer(readonly=True),
-    'title': fields.String(required=True),
-    'description': fields.String(),
-    'completed': fields.Boolean()
-    })
-
-@api.route('/tasks')
-class TaskList(Resource):
-    @api.marshal_list_with(task_model)
-    def get(self):
-        return Task.query.all()
-    
-    
+# Add this function to initialize routes
+def init_routes(app):
+    @app.route('/')
+    def hello_world():
+        try:
+            db.create_all()
+            new_task = Task(title="Test Task", description="This is a test task")
+            db.session.add(new_task)
+            db.session.commit()
+            return f'Hello, Docker! Database is connected. Created task with id: {new_task.id}'
+        except Exception as e:
+            return f'Hello, Docker! Error connecting to database: {str(e)}'
